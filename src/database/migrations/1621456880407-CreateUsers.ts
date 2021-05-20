@@ -10,10 +10,13 @@ export class CreateUsers1621456880407 implements MigrationInterface {
             name: 'id',
             type: 'int',
             isPrimary: true,
+            isGenerated: true,
+            generationStrategy: 'increment',
           },
           {
             name: 'name',
             type: 'varchar',
+            isNullable: true,
           },
           {
             name: 'email',
@@ -22,14 +25,17 @@ export class CreateUsers1621456880407 implements MigrationInterface {
           {
             name: 'password',
             type: 'varchar',
+            isNullable: true,
           },
           {
             name: 'role',
             type: 'varchar',
+            isNullable: true,
           },
           {
             name: 'provider',
             type: 'varchar',
+            isNullable: true,
           },
           {
             name: 'image',
@@ -47,21 +53,13 @@ export class CreateUsers1621456880407 implements MigrationInterface {
             default: 'now()',
           },
         ],
-        foreignKeys: [
-          {
-            name: 'FKUser',
-            referencedTableName: 'users',
-            referencedColumnNames: ['id'],
-            columnNames: ['user_id'],
-            onDelete: 'SET NULL',
-            onUpdate: 'SET NULL',
-          },
-        ],
       })
     );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('users');
+    try {
+      await queryRunner.dropTable('users');
+    } catch (error) {}
   }
 }

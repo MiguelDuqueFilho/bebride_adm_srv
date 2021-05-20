@@ -10,7 +10,7 @@ import { User } from './User';
 
 @Entity('messages')
 class Message {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('increment')
   id: number;
 
   @Column()
@@ -28,8 +28,6 @@ class Message {
 
   @CreateDateColumn()
   created_at: Date;
-
-  constructor() {}
 }
 
 export { Message };

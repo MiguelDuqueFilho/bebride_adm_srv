@@ -8,7 +8,7 @@ import {
 
 @Entity('users')
 class User {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('increment')
   id: number;
 
   @Column()
@@ -34,8 +34,6 @@ class User {
 
   @CreateDateColumn()
   created_at: Date;
-
-  constructor() {}
 }
 
 export { User };

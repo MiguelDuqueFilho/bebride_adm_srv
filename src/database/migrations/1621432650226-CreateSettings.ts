@@ -10,6 +10,8 @@ export class CreateSettings1621432650226 implements MigrationInterface {
             name: 'id',
             type: 'int',
             isPrimary: true,
+            isGenerated: true,
+            generationStrategy: 'increment',
           },
           {
             name: 'username',
@@ -36,6 +38,8 @@ export class CreateSettings1621432650226 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('settings');
+    try {
+      await queryRunner.dropTable('settings');
+    } catch (error) {}
   }
 }

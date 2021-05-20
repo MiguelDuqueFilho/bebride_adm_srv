@@ -35,6 +35,7 @@ class UsersService {
       provider,
       image,
     });
+    logger.debug(user);
     await this.usersRepository.save(user);
     return user;
   }

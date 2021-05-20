@@ -1,15 +1,12 @@
-import express from 'express';
-import { routes } from './routes';
+import dotenv from 'dotenv';
 import pino, { logger } from './logger';
+import { http } from './http';
+import './websocket/client';
 
-import './database';
+dotenv.config();
 
-const app = express();
-app.use(express.json());
-app.use(routes);
-
-app.listen(3344, () => {
-  logger.info('server is running on port 3344.');
+http.listen(process.env.HTTP_PORT, () => {
+  logger.info(`server http is running on port ${process.env.HTTP_PORT}.`);
 });
 
 process.on('SIGINT', function () {

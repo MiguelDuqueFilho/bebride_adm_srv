@@ -8,7 +8,7 @@ import {
 
 @Entity('settings')
 class Setting {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('increment')
   id: number;
 
   @Column()
@@ -22,8 +22,6 @@ class Setting {
 
   @CreateDateColumn()
   created_at: Date;
-
-  constructor() {}
 }
 
 export { Setting };

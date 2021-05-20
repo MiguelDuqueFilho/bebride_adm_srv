@@ -5,11 +5,11 @@ import {
   TableForeignKey,
 } from 'typeorm';
 
-export class CreateMessages1621463208762 implements MigrationInterface {
+export class CreateConnections1621521133725 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'messages',
+        name: 'connections',
         columns: [
           {
             name: 'id',
@@ -22,7 +22,6 @@ export class CreateMessages1621463208762 implements MigrationInterface {
             name: 'admin_id',
             type: 'int',
             isNullable: true,
-            default: null,
           },
           {
             name: 'user_id',
@@ -30,7 +29,7 @@ export class CreateMessages1621463208762 implements MigrationInterface {
             isNullable: true,
           },
           {
-            name: 'text',
+            name: 'socket_id',
             type: 'varchar',
           },
           {
@@ -38,13 +37,18 @@ export class CreateMessages1621463208762 implements MigrationInterface {
             type: 'timestamp',
             default: 'now()',
           },
+          {
+            name: 'updated_at',
+            type: 'timestamp',
+            default: 'now()',
+          },
         ],
       })
     );
     await queryRunner.createForeignKey(
-      'messages',
+      'connections',
       new TableForeignKey({
-        name: 'FKMessagesUser',
+        name: 'FKConnectionUser',
         referencedTableName: 'users',
         referencedColumnNames: ['id'],
         columnNames: ['user_id'],
@@ -55,10 +59,10 @@ export class CreateMessages1621463208762 implements MigrationInterface {
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     try {
-      await queryRunner.dropForeignKey('messages', 'FKMessagesUser');
+      await queryRunner.dropForeignKey('connections', 'FKConnectionUser');
     } catch (error) {}
     try {
-      await queryRunner.dropTable('messages');
+      await queryRunner.dropTable('connections');
     } catch (error) {}
   }
 }
