@@ -4,8 +4,8 @@ import { logger } from '../logger';
 import { Message } from '../entities/Message';
 
 interface IMessagesCreate {
-  admin_id?: number;
-  user_id: number;
+  admin_id?: string;
+  user_id: string;
   text: string;
 }
 
@@ -17,7 +17,7 @@ class MessagesService {
   }
 
   async create({ admin_id, user_id, text }: IMessagesCreate) {
-    logger.debug('/messages MessagesService create recebido.');
+    logger.debug('MessagesService create recebido.');
 
     const message = this.messagesRepository.create({
       admin_id,
@@ -27,8 +27,9 @@ class MessagesService {
     await this.messagesRepository.save(message);
     return message;
   }
+
   async listByuser(user_id: number) {
-    logger.debug('get /messages MessagesService listByuser recebido.');
+    logger.debug('MessagesService listByuser recebido.');
 
     const list = this.messagesRepository.find({
       where: { user_id },

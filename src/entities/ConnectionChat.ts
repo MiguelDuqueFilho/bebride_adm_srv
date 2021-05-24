@@ -2,38 +2,37 @@ import {
   Entity,
   Column,
   CreateDateColumn,
+  UpdateDateColumn,
   ManyToOne,
   JoinColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+
 import { User } from './User';
 
-@Entity('messages')
-class Message {
+@Entity('connections')
+class ConnectionChat {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({
-    type: 'binary',
-    length: 16,
-  })
+  @Column()
   admin_id: string;
 
   @Column()
-  text: string;
+  socket_id: string;
+
+  @Column()
+  user_id: string;
 
   @JoinColumn({ name: 'user_id' })
   @ManyToOne(() => User)
   user: User;
 
-  @Column({
-    type: 'binary',
-    length: 16,
-  })
-  user_id: string;
-
   @CreateDateColumn()
   created_at: Date;
+
+  @UpdateDateColumn()
+  updated_at: Date;
 }
 
-export { Message };
+export { ConnectionChat };

@@ -6,10 +6,18 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
+export enum UserRole {
+  'visitante' = 'visitante',
+  'cliente' = 'cliente',
+  'parceiro' = 'parceiro',
+  'administrador' = 'administrador',
+  'suporte' = 'suporte',
+}
+
 @Entity('users')
 class User {
-  @PrimaryGeneratedColumn('increment')
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   name: string;
@@ -20,8 +28,12 @@ class User {
   @Column()
   password: string;
 
-  @Column()
-  role: string;
+  @Column({
+    type: 'enum',
+    enum: UserRole,
+    default: UserRole.visitante,
+  })
+  role: UserRole;
 
   @Column()
   provider: string;

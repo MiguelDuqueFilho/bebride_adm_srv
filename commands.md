@@ -9,3 +9,8 @@ yarn typeorm migration:create -n CreateSettings
 ```cmd
 yarn typeorm migration:run
 ```
+
+### run revert migrations
+```cmd
+yarn typeorm migration:revert
+```

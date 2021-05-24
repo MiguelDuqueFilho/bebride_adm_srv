@@ -13,25 +13,28 @@ export class CreateMessages1621463208762 implements MigrationInterface {
         columns: [
           {
             name: 'id',
-            type: 'int',
+            type: 'varchar(36)',
             isPrimary: true,
-            isGenerated: true,
-            generationStrategy: 'increment',
           },
           {
             name: 'admin_id',
-            type: 'int',
+            type: 'varchar(36)',
             isNullable: true,
             default: null,
           },
           {
             name: 'user_id',
-            type: 'int',
+            type: 'varchar(36)',
             isNullable: true,
           },
           {
             name: 'text',
             type: 'varchar',
+          },
+          {
+            name: 'updated_at',
+            type: 'timestamp',
+            default: 'now()',
           },
           {
             name: 'created_at',

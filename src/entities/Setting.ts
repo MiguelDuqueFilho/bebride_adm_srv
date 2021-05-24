@@ -8,8 +8,8 @@ import {
 
 @Entity('settings')
 class Setting {
-  @PrimaryGeneratedColumn('increment')
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   username: string;

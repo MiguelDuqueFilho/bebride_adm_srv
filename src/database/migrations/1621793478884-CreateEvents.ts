@@ -1,10 +1,10 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-export class CreateSettings1621432650226 implements MigrationInterface {
+export class CreateEvents1621793478884 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'settings',
+        name: 'events',
         columns: [
           {
             name: 'id',
@@ -12,13 +12,23 @@ export class CreateSettings1621432650226 implements MigrationInterface {
             isPrimary: true,
           },
           {
-            name: 'username',
+            name: 'title',
             type: 'varchar',
+            isNullable: true,
           },
           {
-            name: 'chat',
-            type: 'boolean',
-            default: false,
+            name: 'status',
+            type: "ENUM('inicial','Contratado','Em Andamento','Concluido','Cancelado')",
+          },
+          {
+            name: 'initial_date',
+            type: 'datetime',
+            isNullable: true,
+          },
+          {
+            name: 'event_date',
+            type: 'datetime',
+            isNullable: true,
           },
           {
             name: 'updated_at',
@@ -37,7 +47,7 @@ export class CreateSettings1621432650226 implements MigrationInterface {
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     try {
-      await queryRunner.dropTable('settings');
+      await queryRunner.dropTable('events');
     } catch (error) {}
   }
 }

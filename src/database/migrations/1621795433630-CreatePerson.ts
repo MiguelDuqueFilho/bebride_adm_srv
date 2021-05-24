@@ -5,11 +5,11 @@ import {
   TableForeignKey,
 } from 'typeorm';
 
-export class CreateConnections1621521133725 implements MigrationInterface {
+export class CreatePerson1621795433630 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'connections',
+        name: 'persons',
         columns: [
           {
             name: 'id',
@@ -17,9 +17,12 @@ export class CreateConnections1621521133725 implements MigrationInterface {
             isPrimary: true,
           },
           {
-            name: 'admin_id',
-            type: 'varchar(36)',
-            isNullable: true,
+            name: 'Name',
+            type: 'varchar',
+          },
+          {
+            name: 'gender',
+            type: "ENUM('Masculino','Feminino','Não Binário')",
           },
           {
             name: 'user_id',
@@ -27,16 +30,17 @@ export class CreateConnections1621521133725 implements MigrationInterface {
             isNullable: true,
           },
           {
-            name: 'socket_id',
-            type: 'varchar',
+            name: 'event_id',
+            type: 'varchar(36)',
+            isNullable: true,
           },
           {
-            name: 'created_at',
+            name: 'updated_at',
             type: 'timestamp',
             default: 'now()',
           },
           {
-            name: 'updated_at',
+            name: 'created_at',
             type: 'timestamp',
             default: 'now()',
           },
@@ -44,12 +48,22 @@ export class CreateConnections1621521133725 implements MigrationInterface {
       })
     );
     await queryRunner.createForeignKey(
-      'connections',
+      'persons',
       new TableForeignKey({
-        name: 'FKConnectionUser',
+        name: 'FKPersonUser',
         referencedTableName: 'users',
         referencedColumnNames: ['id'],
         columnNames: ['user_id'],
+        onDelete: 'SET NULL',
+      })
+    );
+    await queryRunner.createForeignKey(
+      'persons',
+      new TableForeignKey({
+        name: 'FKPersonEvent',
+        referencedTableName: 'events',
+        referencedColumnNames: ['id'],
+        columnNames: ['event_id'],
         onDelete: 'SET NULL',
       })
     );
@@ -57,10 +71,13 @@ export class CreateConnections1621521133725 implements MigrationInterface {
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     try {
-      await queryRunner.dropForeignKey('connections', 'FKConnectionUser');
+      await queryRunner.dropForeignKey('persons', 'FKPersonUser');
     } catch (error) {}
     try {
-      await queryRunner.dropTable('connections');
+      await queryRunner.dropForeignKey('persons', 'FKPersonEvent');
+    } catch (error) {}
+    try {
+      await queryRunner.dropTable('persons');
     } catch (error) {}
   }
 }

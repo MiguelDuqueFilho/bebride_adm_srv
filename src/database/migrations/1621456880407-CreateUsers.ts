@@ -8,19 +8,17 @@ export class CreateUsers1621456880407 implements MigrationInterface {
         columns: [
           {
             name: 'id',
-            type: 'int',
+            type: 'varchar(36)',
             isPrimary: true,
-            isGenerated: true,
-            generationStrategy: 'increment',
+          },
+          {
+            name: 'email',
+            type: 'varchar',
           },
           {
             name: 'name',
             type: 'varchar',
             isNullable: true,
-          },
-          {
-            name: 'email',
-            type: 'varchar',
           },
           {
             name: 'password',
@@ -29,8 +27,7 @@ export class CreateUsers1621456880407 implements MigrationInterface {
           },
           {
             name: 'role',
-            type: 'varchar',
-            isNullable: true,
+            type: "ENUM('visitante','cliente','parceiro','administrador','suporte')",
           },
           {
             name: 'provider',
