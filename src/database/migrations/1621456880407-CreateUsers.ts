@@ -1,10 +1,4 @@
-import {
-  MigrationInterface,
-  QueryRunner,
-  Table,
-  TableIndex,
-  TableUnique,
-} from 'typeorm';
+import { MigrationInterface, QueryRunner, Table, TableIndex } from 'typeorm';
 
 export class CreateUsers1621456880407 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -44,11 +38,6 @@ export class CreateUsers1621456880407 implements MigrationInterface {
             isNullable: true,
           },
           {
-            name: 'password_salt',
-            type: 'varchar',
-            isNullable: true,
-          },
-          {
             name: 'password_hash',
             type: 'varchar',
             isNullable: true,
@@ -61,11 +50,6 @@ export class CreateUsers1621456880407 implements MigrationInterface {
           {
             name: 'password_reset_token',
             type: 'varchar',
-            isNullable: true,
-          },
-          {
-            name: 'password_reset_expires',
-            type: 'datetime',
             isNullable: true,
           },
           {

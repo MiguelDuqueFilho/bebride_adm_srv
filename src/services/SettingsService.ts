@@ -29,6 +29,7 @@ class SettingsService {
       chat,
       username,
     });
+
     await this.settingsRepository.save(settings);
     return settings;
   }

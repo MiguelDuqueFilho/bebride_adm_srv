@@ -1,7 +1,6 @@
-import { logger } from './logger';
 import express from 'express';
 import path from 'path';
-// import './database';
+
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import { routes } from './routes';

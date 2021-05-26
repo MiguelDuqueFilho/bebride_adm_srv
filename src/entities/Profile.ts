@@ -9,10 +9,11 @@ import {
   OneToOne,
 } from 'typeorm';
 import { User } from './User';
+import { Event } from './Event';
 
 export enum Gender {
-  'Masculino' = 'Masculino',
   'Feminino' = 'Feminino',
+  'Masculino' = 'Masculino',
   'Não Binário' = 'Não Binário',
 }
 
@@ -31,18 +32,15 @@ class Profile {
   @Column()
   photo: string;
 
-  @OneToOne(() => User, (user) => user.profile_id) // specify inverse side as a second parameter
-  user: User;
+  // @Column({
+  //   type: 'varchar',
+  //   length: 36,
+  // })
+  // event_id: string;
 
-  //   @Column({
-  //     type: 'varchar',
-  //     length: 16,
-  //   })
-  //   event_id: string;
-
-  //   @JoinColumn({ name: 'event_id' })
-  //   @ManyToOne(() => Event)
-  //   event: Event;
+  // @JoinColumn({ name: 'event_id' })
+  // @ManyToOne(() => Event)
+  // event: Event;
 
   @CreateDateColumn()
   created_at: Date;
