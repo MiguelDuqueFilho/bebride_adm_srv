@@ -7,6 +7,9 @@ import { MessagesService } from '../services/MessagesService';
 interface IParams {
   text: string;
   email: string;
+  first_name: string;
+  last_name: string;
+  provider: string;
 }
 
 io.on('connect', (socket) => {
@@ -20,7 +23,7 @@ io.on('connect', (socket) => {
     logger.debug(`client_first_access:`);
     logger.debug({ params });
     //   const socket_id = socket.id;
-    const { text, email } = params as IParams;
+    const { text, email, first_name, last_name, provider } = params as IParams;
 
     let user_id = null;
     const userExists = await usersService.findByEmail({ email });
@@ -29,7 +32,12 @@ io.on('connect', (socket) => {
     logger.debug({ userExists });
 
     if (!userExists) {
-      const user = await usersService.create({ email });
+      const user = await usersService.create({
+        email,
+        first_name,
+        last_name,
+        provider,
+      });
       logger.debug('user...');
       logger.debug(user);
       await connectionsService.create({

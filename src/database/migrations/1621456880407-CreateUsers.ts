@@ -1,4 +1,10 @@
-import { MigrationInterface, QueryRunner, Table } from 'typeorm';
+import {
+  MigrationInterface,
+  QueryRunner,
+  Table,
+  TableIndex,
+  TableUnique,
+} from 'typeorm';
 
 export class CreateUsers1621456880407 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -13,21 +19,24 @@ export class CreateUsers1621456880407 implements MigrationInterface {
           },
           {
             name: 'email',
+            type: 'varchar(150)',
+          },
+          {
+            name: 'first_name',
             type: 'varchar',
           },
           {
-            name: 'name',
+            name: 'last_name',
             type: 'varchar',
-            isNullable: true,
-          },
-          {
-            name: 'password',
-            type: 'varchar',
-            isNullable: true,
           },
           {
             name: 'role',
             type: "ENUM('visitante','cliente','parceiro','administrador','suporte')",
+          },
+          {
+            name: 'profile_id',
+            type: 'varchar(36)',
+            default: null,
           },
           {
             name: 'provider',
@@ -35,8 +44,38 @@ export class CreateUsers1621456880407 implements MigrationInterface {
             isNullable: true,
           },
           {
-            name: 'image',
+            name: 'password_salt',
             type: 'varchar',
+            isNullable: true,
+          },
+          {
+            name: 'password_hash',
+            type: 'varchar',
+            isNullable: true,
+          },
+          {
+            name: 'email_verified',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
+            name: 'password_reset_token',
+            type: 'varchar',
+            isNullable: true,
+          },
+          {
+            name: 'password_reset_expires',
+            type: 'datetime',
+            isNullable: true,
+          },
+          {
+            name: 'remote_reset_ip',
+            type: 'varchar(45)',
+            isNullable: true,
+          },
+          {
+            name: 'deleted_at',
+            type: 'datetime',
             isNullable: true,
           },
           {
@@ -52,11 +91,26 @@ export class CreateUsers1621456880407 implements MigrationInterface {
         ],
       })
     );
+    await queryRunner.createIndex(
+      'users',
+      new TableIndex({
+        name: 'IDX_EMAIL_UNIQUE',
+        columnNames: ['email'],
+        isUnique: true,
+      })
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     try {
+      await queryRunner.dropIndex('users', 'IDX_EMAIL_UNIQUE');
+    } catch (error) {
+      console.error(`Error on dropIndex users email`);
+    }
+    try {
       await queryRunner.dropTable('users');
-    } catch (error) {}
+    } catch (error) {
+      console.error(`Error on dropTable users`);
+    }
   }
 }

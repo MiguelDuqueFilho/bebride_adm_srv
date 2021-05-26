@@ -6,9 +6,9 @@ import {
   ManyToOne,
   JoinColumn,
   PrimaryGeneratedColumn,
+  OneToOne,
 } from 'typeorm';
 import { User } from './User';
-import { Event } from './Event';
 
 export enum Gender {
   'Masculino' = 'Masculino',
@@ -16,13 +16,10 @@ export enum Gender {
   'Não Binário' = 'Não Binário',
 }
 
-@Entity('persons')
-class Person {
+@Entity('profiles')
+class Profile {
   @PrimaryGeneratedColumn('uuid')
   id: string;
-
-  @Column()
-  name: string;
 
   @Column({
     type: 'enum',
@@ -31,25 +28,21 @@ class Person {
   })
   gender: Gender;
 
-  @Column({
-    type: 'varchar',
-    length: 16,
-  })
-  user_id: string;
+  @Column()
+  photo: string;
 
-  @JoinColumn({ name: 'user_id' })
-  @ManyToOne(() => User)
+  @OneToOne(() => User, (user) => user.profile_id) // specify inverse side as a second parameter
   user: User;
 
-  @Column({
-    type: 'varchar',
-    length: 16,
-  })
-  event_id: string;
+  //   @Column({
+  //     type: 'varchar',
+  //     length: 16,
+  //   })
+  //   event_id: string;
 
-  @JoinColumn({ name: 'event_id' })
-  @ManyToOne(() => Event)
-  event: Event;
+  //   @JoinColumn({ name: 'event_id' })
+  //   @ManyToOne(() => Event)
+  //   event: Event;
 
   @CreateDateColumn()
   created_at: Date;
@@ -58,4 +51,4 @@ class Person {
   updated_at: Date;
 }
 
-export { Person };
+export { Profile };

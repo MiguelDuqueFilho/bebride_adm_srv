@@ -21,7 +21,9 @@ const connectionDB = getConnectionOptions()
         database: process.env.DATABASE_DATABASENAME,
       })
     ).then((connect) => {
-      logger.info(`Connection database is ${connect.isConnected}`);
+      logger.info(
+        `Database is ${connect.isConnected ? 'connected' : 'not connected'}`
+      );
 
       io.on('connection', async (socket: Socket) => {
         logger.debug(`connect socket.id = ${socket.id}`);

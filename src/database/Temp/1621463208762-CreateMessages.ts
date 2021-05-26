@@ -58,7 +58,7 @@ export class CreateMessages1621463208762 implements MigrationInterface {
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     try {
-      await queryRunner.dropForeignKey('messages', 'FKMessagesUser');
+      await queryRunner.dropForeignKey('messages', 'FK_MessagesUser');
     } catch (error) {}
     try {
       await queryRunner.dropTable('messages');

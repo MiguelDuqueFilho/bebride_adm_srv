@@ -4,7 +4,12 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   PrimaryGeneratedColumn,
+  Index,
+  JoinColumn,
+  OneToOne,
 } from 'typeorm';
+
+import { Profile } from './Profile';
 
 export enum UserRole {
   'visitante' = 'visitante',
@@ -15,18 +20,19 @@ export enum UserRole {
 }
 
 @Entity('users')
+@Index('IDX_EMAIL_UNIQUE', ['email'], { unique: true })
 class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
-  name: string;
-
-  @Column()
   email: string;
 
   @Column()
-  password: string;
+  first_name: string;
+
+  @Column()
+  last_name: string;
 
   @Column({
     type: 'enum',
@@ -35,11 +41,27 @@ class User {
   })
   role: UserRole;
 
-  @Column()
+  @Column({ select: false })
+  profile_id: string;
+
+  @OneToOne(() => Profile)
+  @JoinColumn({ name: 'profile_id' })
+  profile: Profile;
+
+  @Column({ select: false })
   provider: string;
 
-  @Column()
-  image: string;
+  @Column({ select: false })
+  password_salt: string;
+
+  @Column({ select: false })
+  password_hash: string;
+
+  @Column({ select: false })
+  email_verified: Date;
+
+  @Column({ select: false })
+  deleted_at: Date;
 
   @UpdateDateColumn()
   updated_at: Date;

@@ -5,16 +5,14 @@ import { UsersService } from '../services/UsersService';
 class UsersController {
   async create(request: Request, response: Response) {
     logger.debug('/users UsersController create recebido.');
-    const { name, email, password, role, provider, image } = request.body;
+    const { email, first_name, last_name, provider } = request.body;
     const usersService = new UsersService();
     try {
       const user = await usersService.create({
-        name,
         email,
-        password,
-        role,
+        first_name,
+        last_name,
         provider,
-        image,
       });
       response.json(user);
     } catch (error) {

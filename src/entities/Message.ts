@@ -5,6 +5,7 @@ import {
   ManyToOne,
   JoinColumn,
   PrimaryGeneratedColumn,
+  Index,
 } from 'typeorm';
 import { User } from './User';
 
@@ -14,7 +15,7 @@ class Message {
   id: string;
 
   @Column({
-    type: 'binary',
+    type: 'varchar',
     length: 16,
   })
   admin_id: string;
@@ -26,8 +27,9 @@ class Message {
   @ManyToOne(() => User)
   user: User;
 
+  @Index('FK_MessagesUser', { unique: true })
   @Column({
-    type: 'binary',
+    type: 'varchar',
     length: 16,
   })
   user_id: string;
