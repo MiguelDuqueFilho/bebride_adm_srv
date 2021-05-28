@@ -1,4 +1,9 @@
-import express from 'express';
+import express, {
+  Request,
+  Response,
+  NextFunction,
+  ErrorRequestHandler,
+} from 'express';
 import path from 'path';
 
 import { createServer } from 'http';
@@ -23,6 +28,7 @@ app.get('/pages/admin', (request, response) => {
 });
 
 app.use(express.json());
+
 app.use(routes);
 
 export { http, io };

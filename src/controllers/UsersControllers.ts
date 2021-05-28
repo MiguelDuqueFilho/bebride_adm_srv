@@ -56,6 +56,11 @@ class UsersController {
       // existsOrError(password, 'Senha não informada');
       const user = await usersService.findByEmail({ email });
 
+      if (!user) {
+        return response
+          .status(401)
+          .json({ message: 'Email ou Senha inválido!' });
+      }
       // existsOrError(user, 'Usuário ou Senha inválido!!');
 
       user.password = password;
