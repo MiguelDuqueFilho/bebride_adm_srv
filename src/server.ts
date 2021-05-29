@@ -26,7 +26,7 @@ const connectionDB = getConnectionOptions()
       );
 
       io.on('connection', async (socket: Socket) => {
-        logger.debug(`connect socket.id = ${socket.id}`);
+        logger.info(`connect socket.id = ${socket.id}`);
       });
 
       http.listen(process.env.HTTP_PORT, () => {

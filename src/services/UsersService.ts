@@ -37,7 +37,7 @@ class UsersService {
     provider,
     password,
   }: IUsersCreate) {
-    logger.debug('UsersService create recebido.');
+    logger.debug('>>> UsersService create.');
 
     const userAlreadyExists = await this.usersRepository.findOne({ email });
 
@@ -47,8 +47,6 @@ class UsersService {
 
     const profile = this.profilesRepository.create({ gender, photo });
     await this.profilesRepository.save(profile);
-    logger.debug('profile.');
-    logger.debug(profile);
 
     const user = this.usersRepository.create({
       email,
@@ -62,14 +60,11 @@ class UsersService {
 
     const userCreate = await this.usersRepository.save(user);
 
-    logger.debug(`userCreate ---------------------------------- `);
-    logger.debug(userCreate);
-    delete userCreate.profile_id;
-    delete userCreate.profile;
-    delete userCreate.password;
-    delete userCreate.password_salt;
-    delete userCreate.password_hash;
-    return userCreate;
+    const userFind = await this.findById({ id: userCreate.id });
+    logger.trace('>>> UsersService create return ..............');
+    logger.trace(userFind);
+    logger.trace('<<< UsersService create return ..............');
+    return userFind;
   }
 
   async update({
@@ -82,7 +77,7 @@ class UsersService {
     photo,
     provider,
   }: IUsersCreate) {
-    logger.debug('UsersService update recebido.');
+    logger.debug('>>> UsersService update.');
 
     const userExists = await this.usersRepository.findOne({ id });
 
@@ -93,9 +88,10 @@ class UsersService {
     logger.debug(userExists);
 
     const profile = this.profilesRepository.create({ gender, photo });
-    await this.profilesRepository.save(profile);
-    logger.debug('profile.');
-    logger.debug(profile);
+    const profileCreate = await this.profilesRepository.save(profile);
+    logger.trace('>>> profileCreate ..............................');
+    logger.trace(profileCreate);
+    logger.trace('<<< profileCreate ..............................');
 
     const user = this.usersRepository.create({
       id,
@@ -106,38 +102,47 @@ class UsersService {
       provider,
       password,
     });
-    logger.debug(user);
 
     const userCreate = await this.usersRepository.save(user);
 
-    delete userCreate.password;
-    delete userCreate.password_salt;
+    const userFind = await this.findById({ id: userCreate.id });
 
-    return userCreate;
+    return userFind;
   }
 
   async findByEmail({ email }) {
     logger.debug(`findByEmail UsersService recebido. email = ${email}`);
     const userAlreadyExists = await this.usersRepository.findOne({
+      select: [
+        'id',
+        'email',
+        'first_name',
+        'last_name',
+        'role',
+        'provider',
+        'password_hash',
+      ],
       where: { email },
       relations: ['profile'],
     });
 
-    logger.debug(`Return findByEmail ....`);
-    logger.debug(userAlreadyExists);
-
+    logger.trace(`>>> Return findByEmail ....`);
+    logger.trace(userAlreadyExists);
+    logger.trace(`<<< Return findByEmail ....`);
     return userAlreadyExists;
   }
 
   async findById({ id }) {
     logger.debug(`findById UsersService recebido. email = ${id}`);
     const userExists = await this.usersRepository.findOne({
+      select: ['id', 'email', 'first_name', 'last_name', 'role', 'provider'],
       where: { id },
       relations: ['profile'],
     });
 
-    logger.debug(`Return findById ....`);
-    logger.debug(userExists);
+    logger.trace(`>>> Return findById ....`);
+    logger.trace(userExists);
+    logger.trace(`>>> Return findById ....`);
 
     return userExists;
   }

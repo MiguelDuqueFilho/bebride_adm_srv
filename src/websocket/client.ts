@@ -20,16 +20,17 @@ io.on('connect', (socket) => {
   logger.debug(`io on connect recebido socket.id:${socket.id}`);
 
   socket.on('client_first_access', async (params) => {
-    logger.debug(`client_first_access:`);
-    logger.debug({ params });
+    logger.debug(`>>> socket event client_first_access`);
+    logger.trace({ params });
+
     //   const socket_id = socket.id;
     const { text, email, first_name, last_name, provider } = params as IParams;
 
     let user_id = null;
     const userExists = await usersService.findByEmail({ email });
 
-    logger.debug('userExists...');
-    logger.debug({ userExists });
+    logger.trace(`findByEmail ${email} ..........>`);
+    logger.trace({ userExists });
 
     if (!userExists) {
       const user = await usersService.create({
@@ -38,8 +39,6 @@ io.on('connect', (socket) => {
         last_name,
         provider,
       });
-      logger.debug('user...');
-      logger.debug(user);
       await connectionsService.create({
         socket_id: socket.id,
         user_id: user.id,
@@ -74,6 +73,7 @@ io.on('connect', (socket) => {
     //   const allUsers = await connectionsService.findAllWithoutAdmin();
 
     //   io.emit('admin_list_all_messages', allUsers);
+    logger.trace(`<<< socket event client_first_access`);
   });
 
   // socket.emit('client_send_to_admin', async (params) => {

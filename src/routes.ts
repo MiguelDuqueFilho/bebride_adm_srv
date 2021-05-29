@@ -10,9 +10,18 @@ import { EventsController } from './controllers/EventsController';
 import { ProfilesController } from './controllers/ProfilesController';
 
 /**
+ * Import Middlewares
+ */
+import {
+  isAuthenticate,
+  isAuthenticatedAdmin,
+} from './middlewares/authenticate';
+import { routerLevel } from './middlewares/routerLevel';
+
+/**
  * Import Schema validation data
  */
-import { createUserSchema } from './joiSchema/userSchema';
+import { createUserSchema } from './middlewares/joiSchema/userSchema';
 
 /**
  * define Controllers
@@ -28,6 +37,11 @@ const profilesController = new ProfilesController();
  */
 
 const routes = Router();
+
+/**
+ * Level Router
+ */
+routes.use(routerLevel);
 
 /**
  * Settings
@@ -47,8 +61,12 @@ routes.get('/profiles/:id', profilesController.findById);
  */
 routes.post('/login', usersController.login);
 routes.post('/users', createUserSchema, usersController.create);
-routes.get('/users/email/:email', usersController.findByEmail);
-routes.get('/users/:id', usersController.findById);
+routes.get(
+  '/users/email/:email',
+  isAuthenticatedAdmin,
+  usersController.findByEmail
+);
+routes.get('/users/:id', isAuthenticate, usersController.findById);
 // routes.put('/users/:id', updateUserSchema, usersController.update);
 
 /**

@@ -1,3 +1,5 @@
+import { logger } from '../logger';
+
 let socket_admin_id = null;
 let emailUser = null;
 let socket = null;
@@ -23,9 +25,9 @@ document.querySelector('#start_chat').addEventListener('click', (event) => {
     };
     socket.emit('client_first_access', params, (call, err) => {
       if (err) {
-        console.log(err);
+        logger.err(err);
       } else {
-        console.log(call);
+        logger.debug(call);
       }
     });
   });

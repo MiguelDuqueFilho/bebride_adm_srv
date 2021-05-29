@@ -4,11 +4,13 @@ import { UsersService } from '../services/UsersService';
 
 class UsersController {
   async create(request: Request, response: Response) {
-    logger.debug('UsersController create recebido.');
+    logger.debug('>>> UsersController create .........');
     const { email, first_name, last_name, provider, password, gender, photo } =
       request.body;
-    const usersService = new UsersService();
+
     try {
+      const usersService = new UsersService();
+
       const user = await usersService.create({
         email,
         first_name,
@@ -18,14 +20,14 @@ class UsersController {
         gender,
         photo,
       });
-      response.json(user);
+      response.status(201).json({ id: user.id });
     } catch (error) {
       response.status(400).json({ message: error.message });
     }
   }
 
   async findByEmail(request: Request, response: Response) {
-    logger.debug('UsersController findByEmail recebido.');
+    logger.debug('>>> UsersController findByEmail.');
     const { email } = request.params;
     const usersService = new UsersService();
     try {
@@ -37,7 +39,7 @@ class UsersController {
   }
 
   async findById(request: Request, response: Response) {
-    logger.debug('UsersController findById recebido.');
+    logger.debug('>>> UsersController findById.');
     const { id } = request.params;
     const usersService = new UsersService();
     try {
@@ -49,6 +51,7 @@ class UsersController {
   }
 
   async login(request: Request, response: Response) {
+    logger.debug('>>> UsersController login.');
     const { email, password } = request.body;
     const usersService = new UsersService();
     try {
@@ -61,7 +64,6 @@ class UsersController {
           .status(401)
           .json({ message: 'Email ou Senha inválido!' });
       }
-      // existsOrError(user, 'Usuário ou Senha inválido!!');
 
       user.password = password;
 

@@ -15,8 +15,8 @@ import {
 } from 'typeorm';
 
 import { Profile } from './Profile';
-import dotenv from 'dotenv';
 
+import dotenv from 'dotenv';
 dotenv.config();
 
 export enum UserRole {
