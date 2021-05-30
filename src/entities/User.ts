@@ -1,4 +1,6 @@
 import bcrypt from 'bcryptjs';
+import fs from 'fs';
+import path from 'path';
 import jwt from 'jsonwebtoken';
 
 import {
@@ -19,12 +21,21 @@ import { Profile } from './Profile';
 import dotenv from 'dotenv';
 dotenv.config();
 
-export enum UserRole {
+enum UserRole {
   'visitante' = 'visitante',
   'cliente' = 'cliente',
   'parceiro' = 'parceiro',
   'administrador' = 'administrador',
   'suporte' = 'suporte',
+}
+
+enum UserProvider {
+  'credentials' = 'credentials',
+  'facebook' = 'facebook',
+  'instagram' = 'instagram',
+  'google' = 'google',
+  'chat' = 'chat',
+  'alexa' = 'alexa',
 }
 
 @Entity('users')
@@ -64,13 +75,13 @@ class User {
   //virtual field
   password_salt: string;
 
-  @Column()
+  @Column({ select: false })
   password_hash: string;
 
-  @Column()
+  @Column({ select: false })
   email_verified: Date;
 
-  @Column()
+  @Column({ select: false })
   password_reset_token: string;
 
   @Column({
@@ -80,13 +91,13 @@ class User {
   })
   remote_reset_ip: string;
 
-  @Column()
+  @Column({ select: false })
   deleted_at: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ select: false })
   updated_at: Date;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ select: false })
   created_at: Date;
 
   public get checkPassword(): boolean {
@@ -102,12 +113,26 @@ class User {
       email: this.email,
       role: this.role,
       iat: now,
-      exp: now + 60 * 60 * 24 * 1, // expire 1 days
+      exp: now + 60 * 60 * 5 * 1, // expire 5 horas
     };
+
+    // return {
+    //   ...payload,
+    //   token: jwt.sign(payload, process.env.APP_SECRET),
+    // };
+
+    // o arquivo 'private.key' pode não estar no mesmo diretório que o programa
+    const privateKey = fs.readFileSync(
+      path.resolve(__dirname, '../../keys/private.key')
+    );
 
     return {
       ...payload,
-      token: jwt.sign(payload, process.env.APP_SECRET),
+      token: jwt.sign(
+        payload,
+        { key: privateKey, passphrase: process.env.APP_SECRET },
+        { algorithm: 'RS256' }
+      ),
     };
   }
 
@@ -141,4 +166,4 @@ class User {
   }
 }
 
-export { User };
+export { User, UserRole, UserProvider };

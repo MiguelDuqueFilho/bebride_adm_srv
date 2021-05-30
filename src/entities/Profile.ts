@@ -42,10 +42,10 @@ class Profile {
   // @ManyToOne(() => Event)
   // event: Event;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ select: false })
   created_at: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ select: false })
   updated_at: Date;
 }
 

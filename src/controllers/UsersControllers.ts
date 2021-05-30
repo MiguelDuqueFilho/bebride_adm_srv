@@ -1,12 +1,22 @@
 import { Request, Response } from 'express';
 import { logger } from '../logger';
+import { catchError, langMessage, lError } from '../messages/langMessage';
 import { UsersService } from '../services/UsersService';
+import { UserRole, UserProvider } from '../entities/User';
 
 class UsersController {
   async create(request: Request, response: Response) {
     logger.debug('>>> UsersController create .........');
-    const { email, first_name, last_name, provider, password, gender, photo } =
-      request.body;
+    const {
+      email,
+      first_name,
+      last_name,
+      provider,
+      role,
+      password,
+      gender,
+      photo,
+    } = request.body;
 
     try {
       const usersService = new UsersService();
@@ -16,13 +26,73 @@ class UsersController {
         first_name,
         last_name,
         provider,
+        role,
+        password,
+        gender,
+        photo,
+      });
+      response.status(201).json({ user });
+    } catch (error) {
+      const e = new catchError(error).logger();
+      response.status(e.status).json(e.message);
+    }
+  }
+
+  async update(request: Request, response: Response) {
+    logger.debug('>>> UsersController update .........');
+    const {
+      email,
+      first_name,
+      last_name,
+      provider,
+      role,
+      password,
+      gender,
+      photo,
+    } = request.body;
+
+    try {
+      const usersService = new UsersService();
+
+      const user = await usersService.update({
+        email,
+        first_name,
+        last_name,
+        provider,
+        role,
+        password,
+        gender,
+        photo,
+      });
+      response.status(200).json({ user });
+    } catch (error) {
+      const e = new catchError(error).logger();
+      response.status(e.status).json(e.message);
+    }
+  }
+
+  async register(request: Request, response: Response) {
+    logger.debug('>>> UsersController register .........');
+    const { email, first_name, last_name, gender, photo, password } =
+      request.body;
+
+    try {
+      const usersService = new UsersService();
+
+      const user = await usersService.create({
+        email,
+        first_name,
+        last_name,
+        provider: UserProvider.credentials,
+        role: UserRole.visitante,
         password,
         gender,
         photo,
       });
       response.status(201).json({ id: user.id });
     } catch (error) {
-      response.status(400).json({ message: error.message });
+      const e = new catchError(error).logger();
+      response.status(e.status).json(e.message);
     }
   }
 
@@ -34,7 +104,8 @@ class UsersController {
       const user = await usersService.findByEmail({ email });
       response.json(user);
     } catch (error) {
-      response.status(400).json({ message: error.message });
+      const e = new catchError(error).logger();
+      response.status(e.status).json(e.message);
     }
   }
 
@@ -44,9 +115,11 @@ class UsersController {
     const usersService = new UsersService();
     try {
       const user = await usersService.findById({ id });
+
       response.json(user);
     } catch (error) {
-      response.status(400).json({ message: error.message });
+      const e = new catchError(error).logger();
+      response.status(e.status).json(e.message);
     }
   }
 
@@ -55,31 +128,12 @@ class UsersController {
     const { email, password } = request.body;
     const usersService = new UsersService();
     try {
-      // existsOrError(email, 'E-mail não informado');
-      // existsOrError(password, 'Senha não informada');
-      const user = await usersService.findByEmail({ email });
+      const resp = await usersService.login({ email, password });
 
-      if (!user) {
-        return response
-          .status(401)
-          .json({ message: 'Email ou Senha inválido!' });
-      }
-
-      user.password = password;
-
-      if (!user.checkPassword) {
-        return response
-          .status(401)
-          .json({ message: 'Email ou Senha inválido!' });
-      }
-
-      response.json({
-        user: { ...user.generateToken },
-      });
+      return response.status(200).json({ user: resp.user });
     } catch (error) {
-      return response
-        .status(500)
-        .json({ message: `Erro no Login! - Erro: ${error}` });
+      const e = new catchError(error).logger();
+      response.status(e.status).json(e);
     }
   }
 }

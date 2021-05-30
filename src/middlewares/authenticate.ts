@@ -1,31 +1,15 @@
 import jwt from 'jsonwebtoken';
+import fs from 'fs';
+import path from 'path';
 import { NextFunction, Request, Response } from 'express';
-import { messageLocale } from '../messages/messageLocale';
+import { lError } from '../messages/langMessage';
+
 import dotenv from 'dotenv';
 dotenv.config();
 
 interface RequestMiddleware extends Request {
   decode: any;
 }
-
-// function verifyJWT(request: Request, response: Response, next: NextFunction) {
-//   var token = request.headers['x-access-token'];
-//   if (!token)
-//     return response
-//       .status(401)
-//       .send({ auth: false, message: 'No token provided.' });
-
-//   jwt.verify(token, process.env.SECRET, function (err, decoded) {
-//     if (err)
-//       return response
-//         .status(500)
-//         .send({ auth: false, message: 'Failed to authenticate token.' });
-
-//     // se tudo estiver ok, salva no request para uso posterior
-//     request.userId = decoded.id;
-//     next();
-//   });
-// }
 
 const authenticate = async (request: RequestMiddleware) => {
   const authHeader = request.headers.authorization;
@@ -40,10 +24,15 @@ const authenticate = async (request: RequestMiddleware) => {
   }
 
   try {
-    const decode = jwt.verify(token, process.env.APP_SECRET);
-    request.decode = decode;
+    // const payload = jwt.verify(token, process.env.APP_SECRET);
+    const publicKey = fs.readFileSync(
+      path.resolve(__dirname, '../../keys/public.pem')
+    );
+    const payload = jwt.verify(token, publicKey);
+    request.decode = payload;
     return true;
   } catch (err) {
+    console.log(err);
     return false;
   }
 };
@@ -57,8 +46,8 @@ const isAuthenticate = async (
   if (isOk) {
     return next();
   }
-
-  return response.status(401).json({ message: messageLocale('tokenInvalid') });
+  const e = new lError('tokenInvalid', 401);
+  return response.status(e.status).json(e);
 };
 
 const isAuthenticatedAdmin = async (
@@ -68,15 +57,19 @@ const isAuthenticatedAdmin = async (
 ) => {
   const isOk = await authenticate(request);
   if (isOk) {
+    console.log('request.decode');
     console.log(request.decode);
-    if (request.decode.role === 'administrador') {
-      return next();
-    } else {
-      return response.status(401).json({ message: messageLocale('notAdmin') });
+    console.log('request.headers');
+    console.log(request.headers);
+    if (request.decode.role !== 'administrador') {
+      const e = new lError('notAdmin', 401);
+      return response.status(e.status).json(e);
     }
+    return next();
   }
 
-  return response.status(401).json({ message: messageLocale('tokenInvalid') });
+  const e = new lError('tokenInvalid', 401);
+  return response.status(e.status).json(e);
 };
 
 // const isAuthenticatedAdmin = async (

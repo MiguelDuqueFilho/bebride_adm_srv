@@ -2,6 +2,7 @@ import { getCustomRepository, Repository } from 'typeorm';
 import { UsersRepository } from '../repositories/UsersRepository';
 import { ProfilesRepository } from '../repositories/ProfilesRepository';
 import { logger } from '../logger';
+import { lError, catchError } from '../messages/langMessage';
 import { User, UserRole } from '../entities/User';
 import { Profile, Gender } from '../entities/Profile';
 
@@ -42,7 +43,7 @@ class UsersService {
     const userAlreadyExists = await this.usersRepository.findOne({ email });
 
     if (userAlreadyExists) {
-      throw new Error('Usuário já existe!');
+      throw new lError('userExiste', 200);
     }
 
     const profile = this.profilesRepository.create({ gender, photo });
@@ -53,14 +54,19 @@ class UsersService {
       first_name,
       last_name,
       role,
-      profile,
       provider,
+      profile,
     });
     user.password = password;
 
     const userCreate = await this.usersRepository.save(user);
 
-    const userFind = await this.findById({ id: userCreate.id });
+    const userFind = await this.usersRepository.findOne({
+      select: ['id', 'email', 'first_name', 'last_name', 'role', 'provider'],
+      where: { id: userCreate.id },
+      relations: ['profile'],
+    });
+
     logger.trace('>>> UsersService create return ..............');
     logger.trace(userFind);
     logger.trace('<<< UsersService create return ..............');
@@ -79,13 +85,16 @@ class UsersService {
   }: IUsersCreate) {
     logger.debug('>>> UsersService update.');
 
-    const userExists = await this.usersRepository.findOne({ id });
+    const userFindOne = await this.usersRepository.findOne({
+      where: { id },
+      relations: ['profile'],
+    });
 
-    if (!userExists) {
-      throw new Error('Usuário não existe!');
+    if (!userFindOne) {
+      throw new lError('userNotFound', 200);
     }
-    logger.debug('userExists.');
-    logger.debug(userExists);
+    logger.debug('userFindOne before update.');
+    logger.debug(userFindOne);
 
     const profile = this.profilesRepository.create({ gender, photo });
     const profileCreate = await this.profilesRepository.save(profile);
@@ -94,57 +103,75 @@ class UsersService {
     logger.trace('<<< profileCreate ..............................');
 
     const user = this.usersRepository.create({
-      id,
       first_name,
       last_name,
       role,
-      profile,
       provider,
+      profile,
       password,
     });
 
     const userCreate = await this.usersRepository.save(user);
 
-    const userFind = await this.findById({ id: userCreate.id });
+    const userFind = await this.usersRepository.findOne({
+      select: ['id', 'email', 'first_name', 'last_name', 'role', 'provider'],
+      where: { id: userCreate.id },
+      relations: ['profile'],
+    });
 
     return userFind;
   }
 
   async findByEmail({ email }) {
     logger.debug(`findByEmail UsersService recebido. email = ${email}`);
-    const userAlreadyExists = await this.usersRepository.findOne({
-      select: [
-        'id',
-        'email',
-        'first_name',
-        'last_name',
-        'role',
-        'provider',
-        'password_hash',
-      ],
+    const user = await this.usersRepository.findOne({
+      select: ['id', 'email', 'first_name', 'last_name', 'role', 'provider'],
       where: { email },
       relations: ['profile'],
     });
 
     logger.trace(`>>> Return findByEmail ....`);
-    logger.trace(userAlreadyExists);
+    logger.trace(user);
     logger.trace(`<<< Return findByEmail ....`);
-    return userAlreadyExists;
+    return user;
   }
 
   async findById({ id }) {
     logger.debug(`findById UsersService recebido. email = ${id}`);
-    const userExists = await this.usersRepository.findOne({
+    const user = await this.usersRepository.findOne({
       select: ['id', 'email', 'first_name', 'last_name', 'role', 'provider'],
       where: { id },
       relations: ['profile'],
     });
 
     logger.trace(`>>> Return findById ....`);
-    logger.trace(userExists);
+    logger.trace(user);
     logger.trace(`>>> Return findById ....`);
 
-    return userExists;
+    return user;
+  }
+
+  async login({ email, password }) {
+    logger.debug(`login UsersService email = ${email} e password`);
+
+    const user = await this.usersRepository.findOne({
+      select: ['id', 'first_name', 'email', 'role', 'password_hash'],
+      where: { email },
+    });
+
+    if (!user) {
+      throw new lError('userNotFound', 401);
+    }
+
+    user.password = password;
+
+    if (!user.checkPassword) {
+      throw new lError('userOrPswInv', 401);
+    }
+
+    const payload = { ...user.generateToken };
+
+    return { status: 200, user: { ...payload } };
   }
 }
 

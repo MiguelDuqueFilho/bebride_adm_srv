@@ -1,7 +1,7 @@
 import Joi from 'joi';
 import { NextFunction, Request, Response } from 'express';
 import { requestValidate } from './requestValidate';
-import { messageLocale } from '../../messages/messageLocale';
+import { langMessage } from '../../messages/langMessage';
 
 /**
  * createUserSchema
@@ -22,9 +22,9 @@ const createUserSchema = (
         .required()
         .label('Email')
         .messages({
-          'string.base': messageLocale('joyStringBase'),
-          'string.email': messageLocale('joyStringEmail'),
-          'any.required': messageLocale('joyAnyRequired'),
+          'string.base': langMessage('joyStringBase'),
+          'string.email': langMessage('joyStringEmail'),
+          'any.required': langMessage('joyAnyRequired'),
         }),
       first_name: Joi.string()
         .min(3)
@@ -32,10 +32,10 @@ const createUserSchema = (
         .required()
         .label('Nome')
         .messages({
-          'string.base': messageLocale('joyStringBase'),
-          'string.min': messageLocale('joyStringMin'),
-          'string.max': messageLocale('joyStringMax'),
-          'any.required': messageLocale('joyAnyRequired'),
+          'string.base': langMessage('joyStringBase'),
+          'string.min': langMessage('joyStringMin'),
+          'string.max': langMessage('joyStringMax'),
+          'any.required': langMessage('joyAnyRequired'),
         }),
       last_name: Joi.string()
         .min(3)
@@ -43,42 +43,42 @@ const createUserSchema = (
         .required()
         .label('Sobrenome')
         .messages({
-          'string.base': messageLocale('joyStringBase'),
-          'string.min': messageLocale('joyStringMin'),
-          'string.max': messageLocale('joyStringMax'),
-          'any.required': messageLocale('joyAnyRequired'),
+          'string.base': langMessage('joyStringBase'),
+          'string.min': langMessage('joyStringMin'),
+          'string.max': langMessage('joyStringMax'),
+          'any.required': langMessage('joyAnyRequired'),
         }),
       password: Joi.string()
         .min(6)
         .required()
         .label('Senha')
         .messages({
-          'string.base': messageLocale('joyStringBase'),
-          'string.min': messageLocale('joyStringMin'),
-          'any.required': messageLocale('joyAnyRequired'),
+          'string.base': langMessage('joyStringBase'),
+          'string.min': langMessage('joyStringMin'),
+          'any.required': langMessage('joyAnyRequired'),
         }),
       provider: Joi.string()
         .valid('credentials', 'facebook', 'instagram', 'google', 'chat')
         .required()
         .label('Provedor')
         .messages({
-          'any.only': messageLocale('joiAnyOnly'),
-          'any.required': messageLocale('joyAnyRequired'),
+          'any.only': langMessage('joiAnyOnly'),
+          'any.required': langMessage('joyAnyRequired'),
         }),
 
       role: Joi.string()
         .valid('visitante', 'cliente', 'parceiro', 'administrador', 'suporte')
         .label('Tipo')
         .messages({
-          'any.only': messageLocale('joiAnyOnly'),
-          'any.required': messageLocale('joyAnyRequired'),
+          'any.only': langMessage('joiAnyOnly'),
+          'any.required': langMessage('joyAnyRequired'),
         }),
       gender: Joi.string()
         .valid('Feminino', 'Masculino', 'Não Binário')
         .label('Genero')
         .messages({
-          'any.only': messageLocale('joiAnyOnly'),
-          'any.required': messageLocale('joyAnyRequired'),
+          'any.only': langMessage('joiAnyOnly'),
+          'any.required': langMessage('joyAnyRequired'),
         }),
     }),
   };
@@ -105,9 +105,9 @@ const updateUserSchema = (
         .required()
         .label('Email')
         .messages({
-          'string.base': messageLocale('joyStringBase'),
-          'string.email': messageLocale('joyStringEmail'),
-          'any.required': messageLocale('joyAnyRequired'),
+          'string.base': langMessage('joyStringBase'),
+          'string.email': langMessage('joyStringEmail'),
+          'any.required': langMessage('joyAnyRequired'),
         }),
       first_name: Joi.string()
         .min(3)
@@ -115,10 +115,10 @@ const updateUserSchema = (
         .required()
         .label('Nome')
         .messages({
-          'string.base': messageLocale('joyStringBase'),
-          'string.min': messageLocale('joyStringMin'),
-          'string.max': messageLocale('joyStringMax'),
-          'any.required': messageLocale('joyAnyRequired'),
+          'string.base': langMessage('joyStringBase'),
+          'string.min': langMessage('joyStringMin'),
+          'string.max': langMessage('joyStringMax'),
+          'any.required': langMessage('joyAnyRequired'),
         }),
       last_name: Joi.string()
         .min(3)
@@ -126,42 +126,42 @@ const updateUserSchema = (
         .required()
         .label('Sobrenome')
         .messages({
-          'string.base': messageLocale('joyStringBase'),
-          'string.min': messageLocale('joyStringMin'),
-          'string.max': messageLocale('joyStringMax'),
-          'any.required': messageLocale('joyAnyRequired'),
+          'string.base': langMessage('joyStringBase'),
+          'string.min': langMessage('joyStringMin'),
+          'string.max': langMessage('joyStringMax'),
+          'any.required': langMessage('joyAnyRequired'),
         }),
       password: Joi.string()
         .min(6)
         .required()
         .label('Senha')
         .messages({
-          'string.base': messageLocale('joyStringBase'),
-          'string.min': messageLocale('joyStringMin'),
-          'any.required': messageLocale('joyAnyRequired'),
+          'string.base': langMessage('joyStringBase'),
+          'string.min': langMessage('joyStringMin'),
+          'any.required': langMessage('joyAnyRequired'),
         }),
       provider: Joi.string()
         .valid('credentials', 'facebook', 'instagram', 'google', 'chat')
         .required()
         .label('Provedor')
         .messages({
-          'any.only': messageLocale('joiAnyOnly'),
-          'any.required': messageLocale('joyAnyRequired'),
+          'any.only': langMessage('joiAnyOnly'),
+          'any.required': langMessage('joyAnyRequired'),
         }),
 
       role: Joi.string()
         .valid('visitante', 'cliente', 'parceiro', 'administrador', 'suporte')
         .label('Tipo')
         .messages({
-          'any.only': messageLocale('joiAnyOnly'),
-          'any.required': messageLocale('joyAnyRequired'),
+          'any.only': langMessage('joiAnyOnly'),
+          'any.required': langMessage('joyAnyRequired'),
         }),
       gender: Joi.string()
         .valid('Feminino', 'Masculino', 'Não Binário')
         .label('Genero')
         .messages({
-          'any.only': messageLocale('joiAnyOnly'),
-          'any.required': messageLocale('joyAnyRequired'),
+          'any.only': langMessage('joiAnyOnly'),
+          'any.required': langMessage('joyAnyRequired'),
         }),
     }),
   };

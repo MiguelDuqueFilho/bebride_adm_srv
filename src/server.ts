@@ -2,6 +2,7 @@ import pino, { logger } from './logger';
 import { createConnection, getConnectionOptions } from 'typeorm';
 import { Socket } from 'socket.io';
 import { http, io } from './http';
+import { langMessage, catchError, cError } from './messages/langMessage';
 
 import './websocket/client';
 import './websocket/admin';
@@ -21,6 +22,8 @@ const connectionDB = getConnectionOptions()
         database: process.env.DATABASE_DATABASENAME,
       })
     ).then((connect) => {
+      logger.info(langMessage('serverStart'));
+
       logger.info(
         `Database is ${connect.isConnected ? 'connected' : 'not connected'}`
       );

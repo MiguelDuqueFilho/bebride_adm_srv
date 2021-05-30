@@ -47,33 +47,56 @@ routes.use(routerLevel);
  * Settings
  */
 
-routes.post('/settings', settingsController.create);
-routes.get('/settings/:username', settingsController.findByUsername);
-routes.put('/settings/:username', settingsController.update);
+routes.post('/settings', isAuthenticatedAdmin, settingsController.create);
+routes.get(
+  '/settings/:username',
+  isAuthenticatedAdmin,
+  settingsController.findByUsername
+);
+routes.put(
+  '/settings/:username',
+  isAuthenticatedAdmin,
+  settingsController.update
+);
 
 /**
  * Profiles
  */
-routes.get('/profiles/:id', profilesController.findById);
+routes.get('/profiles/:id', isAuthenticatedAdmin, profilesController.findById);
 
 /**
  * Users
  */
 routes.post('/login', usersController.login);
-routes.post('/users', createUserSchema, usersController.create);
+routes.post('/signin', usersController.register);
+routes.post(
+  '/users',
+  isAuthenticatedAdmin,
+  createUserSchema,
+  usersController.create
+);
+routes.put(
+  '/users',
+  isAuthenticatedAdmin,
+  createUserSchema,
+  usersController.update
+);
 routes.get(
   '/users/email/:email',
   isAuthenticatedAdmin,
   usersController.findByEmail
 );
-routes.get('/users/:id', isAuthenticate, usersController.findById);
-// routes.put('/users/:id', updateUserSchema, usersController.update);
+routes.get('/users/:id', isAuthenticatedAdmin, usersController.findById);
 
 /**
  * Messages
  */
-routes.post('/messages', messagesController.create);
-routes.get('/messages/:id', messagesController.showByuser);
-routes.post('/events', eventsController.create);
+routes.post('/messages', isAuthenticatedAdmin, messagesController.create);
+routes.get(
+  '/messages/:id',
+  isAuthenticatedAdmin,
+  messagesController.showByuser
+);
+routes.post('/events', isAuthenticatedAdmin, eventsController.create);
 
 export { routes };
