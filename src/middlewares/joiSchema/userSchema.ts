@@ -102,51 +102,41 @@ const updateUserSchema = (
     body: Joi.object().keys({
       email: Joi.string()
         .email({ minDomainSegments: 2 })
-        .required()
         .label('Email')
         .messages({
           'string.base': langMessage('joyStringBase'),
           'string.email': langMessage('joyStringEmail'),
-          'any.required': langMessage('joyAnyRequired'),
         }),
       first_name: Joi.string()
         .min(3)
         .max(30)
-        .required()
         .label('Nome')
         .messages({
           'string.base': langMessage('joyStringBase'),
           'string.min': langMessage('joyStringMin'),
           'string.max': langMessage('joyStringMax'),
-          'any.required': langMessage('joyAnyRequired'),
         }),
       last_name: Joi.string()
         .min(3)
         .max(200)
-        .required()
         .label('Sobrenome')
         .messages({
           'string.base': langMessage('joyStringBase'),
           'string.min': langMessage('joyStringMin'),
           'string.max': langMessage('joyStringMax'),
-          'any.required': langMessage('joyAnyRequired'),
         }),
       password: Joi.string()
         .min(6)
-        .required()
         .label('Senha')
         .messages({
           'string.base': langMessage('joyStringBase'),
           'string.min': langMessage('joyStringMin'),
-          'any.required': langMessage('joyAnyRequired'),
         }),
       provider: Joi.string()
         .valid('credentials', 'facebook', 'instagram', 'google', 'chat')
-        .required()
         .label('Provedor')
         .messages({
           'any.only': langMessage('joiAnyOnly'),
-          'any.required': langMessage('joyAnyRequired'),
         }),
 
       role: Joi.string()
@@ -154,14 +144,17 @@ const updateUserSchema = (
         .label('Tipo')
         .messages({
           'any.only': langMessage('joiAnyOnly'),
-          'any.required': langMessage('joyAnyRequired'),
         }),
       gender: Joi.string()
         .valid('Feminino', 'Masculino', 'Não Binário')
         .label('Genero')
         .messages({
           'any.only': langMessage('joiAnyOnly'),
-          'any.required': langMessage('joyAnyRequired'),
+        }),
+      photo: Joi.string()
+        .label('Foto')
+        .messages({
+          'string.base': langMessage('joyStringBase'),
         }),
     }),
   };

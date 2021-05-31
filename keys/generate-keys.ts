@@ -5,8 +5,6 @@ import path from 'path';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const password = process.env.APP_SECRET;
-
 path.resolve(__dirname, 'public.pem');
 
 generateKeyPair(
@@ -21,7 +19,7 @@ generateKeyPair(
       type: 'pkcs8',
       format: 'pem',
       cipher: 'aes-256-cbc',
-      passphrase: password,
+      passphrase: process.env.APP_SECRET,
     },
   },
   (erro, chavePublica, chavePrivada) => {

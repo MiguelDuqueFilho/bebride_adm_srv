@@ -6,7 +6,7 @@
   "password": "secret",
   "database": "bebride",
   "charset": "UTF8_GENERAL_CI",
-  "logging": ["error"],
+  "logging": false,
   "synchronize": false,
   "entities": ["./src/entities/**.ts"],
   "subscribers": ["./src/database/subscribers/**.ts"],

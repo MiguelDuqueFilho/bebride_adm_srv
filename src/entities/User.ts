@@ -67,7 +67,7 @@ class User {
   @JoinColumn({ name: 'profile_id' })
   profile: Profile;
 
-  @Column({ select: false })
+  @Column()
   provider: string;
 
   //virtual field
@@ -75,13 +75,13 @@ class User {
   //virtual field
   password_salt: string;
 
-  @Column({ select: false })
+  @Column()
   password_hash: string;
 
-  @Column({ select: false })
+  @Column()
   email_verified: Date;
 
-  @Column({ select: false })
+  @Column()
   password_reset_token: string;
 
   @Column({
@@ -91,13 +91,13 @@ class User {
   })
   remote_reset_ip: string;
 
-  @Column({ select: false })
+  @Column()
   deleted_at: Date;
 
-  @UpdateDateColumn({ select: false })
+  @UpdateDateColumn()
   updated_at: Date;
 
-  @CreateDateColumn({ select: false })
+  @CreateDateColumn()
   created_at: Date;
 
   public get checkPassword(): boolean {
@@ -138,10 +138,14 @@ class User {
 
   @BeforeInsert()
   @BeforeUpdate()
-  async encryptPassword() {
+  private async encryptPassword() {
     if (this.password) {
-      this.password_salt = bcrypt.genSaltSync(10);
-      this.password_hash = bcrypt.hashSync(this.password, this.password_salt);
+      this.password_salt = await bcrypt.genSalt(10);
+      this.password_hash = await bcrypt.hash(this.password, this.password_salt);
+      console.log(`encryptPassword this.password`);
+      console.log(this.password);
+      console.log(`encryptPassword this.password_hash`);
+      console.log(this.password_hash);
     }
     this.password = null;
     this.password_salt = null;

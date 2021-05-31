@@ -8,9 +8,9 @@ import { Profile, Gender } from '../entities/Profile';
 
 interface IUsersCreate {
   id?: string;
-  email: string;
-  first_name: string;
-  last_name: string;
+  email?: string;
+  first_name?: string;
+  last_name?: string;
   role?: UserRole;
   password?: string;
   gender?: Gender;
@@ -77,15 +77,15 @@ class UsersService {
     id,
     first_name,
     last_name,
+    provider,
     role,
     password,
     gender,
     photo,
-    provider,
   }: IUsersCreate) {
     logger.debug('>>> UsersService update.');
 
-    const userFindOne = await this.usersRepository.findOne({
+    let userFindOne = await this.usersRepository.findOne({
       where: { id },
       relations: ['profile'],
     });
@@ -93,29 +93,57 @@ class UsersService {
     if (!userFindOne) {
       throw new lError('userNotFound', 200);
     }
-    logger.debug('userFindOne before update.');
-    logger.debug(userFindOne);
+    logger.trace('userFindOne before update.');
+    logger.trace(userFindOne);
 
-    const profile = this.profilesRepository.create({ gender, photo });
-    const profileCreate = await this.profilesRepository.save(profile);
-    logger.trace('>>> profileCreate ..............................');
-    logger.trace(profileCreate);
-    logger.trace('<<< profileCreate ..............................');
+    /**
+     * update profile
+     */
 
-    const user = this.usersRepository.create({
-      first_name,
-      last_name,
-      role,
-      provider,
-      profile,
-      password,
+    const updateProfile = { gender, photo };
+    logger.trace('updateProfile.');
+    logger.trace(updateProfile);
+
+    const profile = this.profilesRepository.create({
+      ...userFindOne.profile,
+      ...updateProfile,
     });
 
-    const userCreate = await this.usersRepository.save(user);
+    logger.trace('profilesRepository create.');
+    logger.trace(profile);
+
+    const profileUpdate = await this.profilesRepository.save(profile);
+    logger.trace('>>> profileUpdate ..............................');
+    logger.trace(profileUpdate);
+    logger.trace('<<< profileUpdate ..............................');
+
+    /**
+     * update user
+     */
+
+    let updateUser = {
+      first_name,
+      last_name,
+      provider,
+      role,
+    };
+
+    const user = this.usersRepository.create({
+      ...userFindOne,
+      ...updateUser,
+    });
+
+    if (password) user.password = password;
+
+    const userUpdate = await this.usersRepository.save(user);
+
+    logger.trace('>>> userUpdate ..............................');
+    logger.trace(userUpdate);
+    logger.trace('<<< userUpdate ..............................');
 
     const userFind = await this.usersRepository.findOne({
       select: ['id', 'email', 'first_name', 'last_name', 'role', 'provider'],
-      where: { id: userCreate.id },
+      where: { id: userUpdate.id },
       relations: ['profile'],
     });
 
@@ -155,7 +183,6 @@ class UsersService {
     logger.debug(`login UsersService email = ${email} e password`);
 
     const user = await this.usersRepository.findOne({
-      select: ['id', 'first_name', 'email', 'role', 'password_hash'],
       where: { email },
     });
 
@@ -164,6 +191,10 @@ class UsersService {
     }
 
     user.password = password;
+
+    logger.trace(`>>> login findOne ....`);
+    logger.trace(user);
+    logger.trace(`>>> login findOne ....`);
 
     if (!user.checkPassword) {
       throw new lError('userOrPswInv', 401);

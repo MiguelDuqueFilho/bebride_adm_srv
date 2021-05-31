@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 import fs from 'fs';
 import path from 'path';
 import { NextFunction, Request, Response } from 'express';
+import { logger } from '../logger';
 import { lError } from '../messages/langMessage';
 
 import dotenv from 'dotenv';
@@ -32,7 +33,6 @@ const authenticate = async (request: RequestMiddleware) => {
     request.decode = payload;
     return true;
   } catch (err) {
-    console.log(err);
     return false;
   }
 };
@@ -57,10 +57,10 @@ const isAuthenticatedAdmin = async (
 ) => {
   const isOk = await authenticate(request);
   if (isOk) {
-    console.log('request.decode');
-    console.log(request.decode);
-    console.log('request.headers');
-    console.log(request.headers);
+    logger.trace('>>> request.decode');
+    logger.trace(request.decode);
+    logger.trace('<<< request.decode');
+
     if (request.decode.role !== 'administrador') {
       const e = new lError('notAdmin', 401);
       return response.status(e.status).json(e);

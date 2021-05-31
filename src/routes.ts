@@ -21,7 +21,10 @@ import { routerLevel } from './middlewares/routerLevel';
 /**
  * Import Schema validation data
  */
-import { createUserSchema } from './middlewares/joiSchema/userSchema';
+import {
+  createUserSchema,
+  updateUserSchema,
+} from './middlewares/joiSchema/userSchema';
 
 /**
  * define Controllers
@@ -65,10 +68,14 @@ routes.put(
 routes.get('/profiles/:id', isAuthenticatedAdmin, profilesController.findById);
 
 /**
- * Users
+ * Users without Autorization
  */
 routes.post('/login', usersController.login);
-routes.post('/signin', usersController.register);
+routes.post('/register', usersController.register);
+
+/**
+ * Users with Autorization
+ */
 routes.post(
   '/users',
   isAuthenticatedAdmin,
@@ -76,9 +83,9 @@ routes.post(
   usersController.create
 );
 routes.put(
-  '/users',
+  '/users/:id',
   isAuthenticatedAdmin,
-  createUserSchema,
+  updateUserSchema,
   usersController.update
 );
 routes.get(

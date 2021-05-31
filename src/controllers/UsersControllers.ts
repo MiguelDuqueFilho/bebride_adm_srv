@@ -40,22 +40,16 @@ class UsersController {
 
   async update(request: Request, response: Response) {
     logger.debug('>>> UsersController update .........');
-    const {
-      email,
-      first_name,
-      last_name,
-      provider,
-      role,
-      password,
-      gender,
-      photo,
-    } = request.body;
+    const { first_name, last_name, provider, role, password, gender, photo } =
+      request.body;
+
+    const { id } = request.params;
 
     try {
       const usersService = new UsersService();
 
       const user = await usersService.update({
-        email,
+        id,
         first_name,
         last_name,
         provider,
