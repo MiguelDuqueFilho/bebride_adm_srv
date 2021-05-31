@@ -4,7 +4,7 @@ import { PersonsService } from '../services/PersonsService';
 
 class PersonsController {
   async create(request: Request, response: Response) {
-    logger.debug('PersonsController create recebido.');
+    logger.debug('PersonsController create  ');
     const { name, gender, user_id, event_id } = request.body;
     const usersService = new PersonsService();
     try {

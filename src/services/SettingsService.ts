@@ -15,7 +15,7 @@ class SettingsService {
     this.settingsRepository = getCustomRepository(SettingsRepository);
   }
   async create({ chat, username }: ISettingsCreate) {
-    logger.debug('/settings SettingsService create recebido.');
+    logger.debug('/settings SettingsService create  ');
 
     const settingsAlreadyExists = await this.settingsRepository.findOne({
       username,

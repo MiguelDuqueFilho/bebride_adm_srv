@@ -6,7 +6,7 @@ import { lError, catchError } from '../messages/langMessage';
 import { User, UserRole } from '../entities/User';
 import { Profile, Gender } from '../entities/Profile';
 
-interface IUsersCreate {
+interface IUsers {
   id?: string;
   email?: string;
   first_name?: string;
@@ -37,7 +37,7 @@ class UsersService {
     photo,
     provider,
     password,
-  }: IUsersCreate) {
+  }: IUsers) {
     logger.debug('>>> UsersService create.');
 
     const userAlreadyExists = await this.usersRepository.findOne({ email });
@@ -82,7 +82,7 @@ class UsersService {
     password,
     gender,
     photo,
-  }: IUsersCreate) {
+  }: IUsers) {
     logger.debug('>>> UsersService update.');
 
     let userFindOne = await this.usersRepository.findOne({
@@ -126,6 +126,7 @@ class UsersService {
       last_name,
       provider,
       role,
+      profile: profileUpdate,
     };
 
     const user = this.usersRepository.create({
@@ -151,8 +152,8 @@ class UsersService {
   }
 
   async findByEmail({ email }) {
-    logger.debug(`findByEmail UsersService recebido. email = ${email}`);
-    const user = await this.usersRepository.findOne({
+    logger.debug(`findByEmail UsersService email = ${email}`);
+    let user = await this.usersRepository.findOne({
       select: ['id', 'email', 'first_name', 'last_name', 'role', 'provider'],
       where: { email },
       relations: ['profile'],
@@ -161,11 +162,15 @@ class UsersService {
     logger.trace(`>>> Return findByEmail ....`);
     logger.trace(user);
     logger.trace(`<<< Return findByEmail ....`);
-    return user;
+
+    if (user) {
+      return user;
+    }
+    return {};
   }
 
   async findById({ id }) {
-    logger.debug(`findById UsersService recebido. email = ${id}`);
+    logger.debug(`findById UsersService id = ${id}`);
     const user = await this.usersRepository.findOne({
       select: ['id', 'email', 'first_name', 'last_name', 'role', 'provider'],
       where: { id },
@@ -176,7 +181,10 @@ class UsersService {
     logger.trace(user);
     logger.trace(`>>> Return findById ....`);
 
-    return user;
+    if (user) {
+      return user;
+    }
+    return {};
   }
 
   async login({ email, password }) {
@@ -199,11 +207,10 @@ class UsersService {
     if (!user.checkPassword) {
       throw new lError('userOrPswInv', 401);
     }
-
     const payload = { ...user.generateToken };
 
-    return { status: 200, user: { ...payload } };
+    return { status: 200, ...payload };
   }
 }
 
-export { UsersService };
+export { UsersService, IUsers };

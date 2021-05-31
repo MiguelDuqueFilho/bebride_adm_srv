@@ -9,6 +9,7 @@ export const pt_BR = {
   joyStringMin: `{#label} deve conter no mínimo {#limit} caracteres`,
   joyStringMax: `{#label} deve conter no maximo {#limit} caracteres`,
   // Error messages
+  messageHttp404: `Desculpe, não consigo encontrar esta página!`,
   messageNotFound: `Mensagem não encontrada para localidade "pt_BR".`,
   tokenInvalid: `Token Invalido.`,
   notAdmin: `Usuário não é administrador.`,

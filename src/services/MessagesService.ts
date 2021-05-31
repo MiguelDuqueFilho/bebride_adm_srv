@@ -17,7 +17,7 @@ class MessagesService {
   }
 
   async create({ admin_id, user_id, text }: IMessagesCreate) {
-    logger.debug('MessagesService create recebido.');
+    logger.debug('MessagesService create  ');
 
     const message = this.messagesRepository.create({
       admin_id,
@@ -29,7 +29,7 @@ class MessagesService {
   }
 
   async listByuser(user_id: number) {
-    logger.debug('MessagesService listByuser recebido.');
+    logger.debug('MessagesService listByuser  ');
 
     const list = this.messagesRepository.find({
       where: { user_id },

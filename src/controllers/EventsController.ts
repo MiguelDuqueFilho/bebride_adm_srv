@@ -4,7 +4,7 @@ import { EventsService } from '../services/EventsService';
 
 class EventsController {
   async create(request: Request, response: Response) {
-    logger.debug('EventsController create recebido.');
+    logger.debug('EventsController create ');
     const { title, status, initial_date, event_date } = request.body;
     const eventsService = new EventsService();
     try {

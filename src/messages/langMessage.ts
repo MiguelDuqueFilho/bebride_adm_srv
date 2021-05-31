@@ -1,5 +1,5 @@
 import { languageMessage } from './language';
-import pino, { logger } from '../logger';
+import { logger } from '../logger';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -22,26 +22,35 @@ interface IError extends Error {
 }
 
 function lError(message: string, status?: number) {
-  this.name = 'Error';
+  this.name = 'CustomError';
   this.status = status ?? 500;
-  this.message = langMessage(message) ?? 'Generic error message !!!';
+  this.error = {
+    message: langMessage(message) ?? 'Generic custom error message !!!',
+  };
 }
 lError.prototype = Object.create(lError.prototype);
 lError.prototype.constructor = lError;
 
 function cError(message: string, status?: number) {
-  this.name = 'Error';
+  this.name = 'CustomError';
   this.status = status ?? 500;
-  this.message = message ?? 'Generic custom error message !!!';
+  this.error = { message: message ?? 'Generic custom error message !!!' };
 }
 cError.prototype = Object.create(cError.prototype);
 cError.prototype.constructor = cError;
 
 function catchError(error: IError, status?: number) {
-  this.name = 'Error';
+  this.name = error.name;
   this.status = error.status ?? 500;
-  this.message = error.message ?? 'Generic custom error message !!!';
+  if (this.name === 'CustomError') {
+    this.error = {
+      message: error.message ?? 'Generic custom error message !!!',
+    };
+  } else {
+    this.message = error.message ?? 'Generic custom error message !!!';
+  }
 }
+
 catchError.prototype = Object.create(catchError.prototype);
 catchError.prototype.constructor = catchError;
 

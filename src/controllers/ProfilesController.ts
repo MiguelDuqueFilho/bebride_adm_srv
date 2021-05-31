@@ -4,7 +4,7 @@ import { ProfilesService } from '../services/ProfilesService';
 
 class ProfilesController {
   async findById(request: Request, response: Response) {
-    logger.debug('ProfilesController findById recebido.');
+    logger.debug('ProfilesController findById  ');
     const { id } = request.params;
     const profilesService = new ProfilesService();
     try {

@@ -12,13 +12,19 @@ class ProfilesService {
   }
 
   async findById({ id }) {
-    logger.debug(`findById UsersService recebido. email = ${id}`);
-    const profileExists = await this.profilesRepository.findOne({
+    logger.debug(`findById UsersService id = ${id}`);
+    const profile = await this.profilesRepository.findOne({
       where: { id },
     });
-    logger.debug(profileExists);
 
-    return profileExists;
+    logger.trace(`>>> profile findById ....`);
+    logger.trace(profile);
+    logger.trace(`>>> profile findById ....`);
+
+    if (profile) {
+      return profile;
+    }
+    return {};
   }
 }
 

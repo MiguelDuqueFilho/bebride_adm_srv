@@ -4,7 +4,7 @@ import { MessagesService } from '../services/MessagesService';
 
 class MessagesController {
   async create(request: Request, response: Response) {
-    logger.debug('/messages MessagesController create recebido.');
+    logger.debug('/messages MessagesController create');
     const { admin_id, user_id, text } = request.body;
     const messagesService = new MessagesService();
     try {
@@ -19,7 +19,7 @@ class MessagesController {
     }
   }
   async showByuser(request: Request, response: Response) {
-    logger.debug('/messages:id MessagesController showByuser recebido.');
+    logger.debug('/messages:id MessagesController showByuser ');
     const { id } = request.params;
     const messagesService = new MessagesService();
     try {

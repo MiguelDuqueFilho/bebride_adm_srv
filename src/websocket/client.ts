@@ -1,10 +1,11 @@
 import { logger } from '../logger';
 import { io } from '../http';
 import { ConnectionsService } from '../services/ConnectionsService';
-import { UsersService } from '../services/UsersService';
+import { UsersService, IUsers } from '../services/UsersService';
 import { MessagesService } from '../services/MessagesService';
 
 interface IParams {
+  id?: string;
   text: string;
   email: string;
   first_name: string;
@@ -17,7 +18,7 @@ io.on('connect', (socket) => {
   const usersService = new UsersService();
   const messagesService = new MessagesService();
 
-  logger.debug(`io on connect recebido socket.id:${socket.id}`);
+  logger.debug(`io on connect socket.id:${socket.id}`);
 
   socket.on('client_first_access', async (params) => {
     logger.debug(`>>> socket event client_first_access`);
@@ -27,12 +28,12 @@ io.on('connect', (socket) => {
     const { text, email, first_name, last_name, provider } = params as IParams;
 
     let user_id = null;
-    const userExists = await usersService.findByEmail({ email });
+    const userFindByEmail: IUsers = await usersService.findByEmail({ email });
 
     logger.trace(`findByEmail ${email} ..........>`);
-    logger.trace({ userExists });
+    logger.trace({ userFindByEmail });
 
-    if (!userExists) {
+    if (!userFindByEmail) {
       const user = await usersService.create({
         email,
         first_name,
@@ -46,7 +47,7 @@ io.on('connect', (socket) => {
 
       user_id = user.id;
     } else {
-      user_id = userExists.id;
+      user_id = userFindByEmail.id;
 
       //     const connection = await connectionsService.findByUserId(userExists.id);
 

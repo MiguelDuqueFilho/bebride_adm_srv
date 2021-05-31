@@ -24,6 +24,8 @@ import { routerLevel } from './middlewares/routerLevel';
 import {
   createUserSchema,
   updateUserSchema,
+  registerUserSchema,
+  findByEmailUserSchema,
 } from './middlewares/joiSchema/userSchema';
 
 /**
@@ -71,7 +73,7 @@ routes.get('/profiles/:id', isAuthenticatedAdmin, profilesController.findById);
  * Users without Autorization
  */
 routes.post('/login', usersController.login);
-routes.post('/register', usersController.register);
+routes.post('/register', registerUserSchema, usersController.register);
 
 /**
  * Users with Autorization
@@ -91,6 +93,7 @@ routes.put(
 routes.get(
   '/users/email/:email',
   isAuthenticatedAdmin,
+  findByEmailUserSchema,
   usersController.findByEmail
 );
 routes.get('/users/:id', isAuthenticatedAdmin, usersController.findById);

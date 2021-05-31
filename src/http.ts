@@ -1,19 +1,16 @@
-import express, {
-  Request,
-  Response,
-  NextFunction,
-  ErrorRequestHandler,
-} from 'express';
+import express from 'express';
 import path from 'path';
 
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import { routes } from './routes';
+import { error404 } from './middlewares/error404';
 
 const app = express();
 const http = createServer(app); // protocolo http
 const io = new Server(http); // protocolo WebSocket
 
+app.use(express.json());
 app.use(express.static(path.join(__dirname, '..', 'public')));
 app.set('views', path.join(__dirname, '..', 'public'));
 app.engine('html', require('ejs').renderFile);
@@ -30,5 +27,7 @@ app.get('/pages/admin', (request, response) => {
 app.use(express.json());
 
 app.use(routes);
+
+app.use(error404);
 
 export { http, io };

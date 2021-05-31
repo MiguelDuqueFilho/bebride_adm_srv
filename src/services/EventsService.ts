@@ -19,7 +19,7 @@ class EventsService {
   }
 
   async create({ title, status, initial_date, event_date }: IEventsCreate) {
-    logger.debug('/Events EventsService create recebido.');
+    logger.debug('/Events EventsService create  ');
 
     const event = this.EventsRepository.create({
       title,
@@ -33,7 +33,7 @@ class EventsService {
   }
 
   async findByID({ id }) {
-    logger.debug(`EventsService recebido. email = ${id}`);
+    logger.debug(`EventsService   email = ${id}`);
     const eventExists = await this.EventsRepository.findOne({
       id,
     });

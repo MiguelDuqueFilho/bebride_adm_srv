@@ -4,7 +4,7 @@ import { SettingsService } from '../services/SettingsService';
 
 class SettingsController {
   async create(request: Request, response: Response) {
-    logger.debug('/settings SettingsController create recebido.');
+    logger.debug('/settings SettingsController create  ');
     const { chat, username } = request.body;
     const settingsService = new SettingsService();
     try {

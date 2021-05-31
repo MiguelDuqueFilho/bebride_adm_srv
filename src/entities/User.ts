@@ -127,7 +127,7 @@ class User {
     );
 
     return {
-      ...payload,
+      user: { ...payload },
       token: jwt.sign(
         payload,
         { key: privateKey, passphrase: process.env.APP_SECRET },
@@ -146,9 +146,9 @@ class User {
       console.log(this.password);
       console.log(`encryptPassword this.password_hash`);
       console.log(this.password_hash);
+      delete this.password;
+      delete this.password_salt;
     }
-    this.password = null;
-    this.password_salt = null;
   }
 
   public get generateLoginActivate() {

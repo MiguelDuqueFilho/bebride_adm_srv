@@ -10,9 +10,10 @@ function routerLevel(request: Request, response: Response, next: NextFunction) {
     )} url: ${chalk.green(request.originalUrl)}`
   );
 
-  // logger.trace({ request });
+  const { body, params, query, headers, url } = request;
 
-  const { body, params, query, headers } = request;
+  logger.trace(`>>> http request url = ${chalk.green(url)}`);
+
   if (Object.entries(headers).length !== 0) {
     logger.trace(`>>> http headers -------------- `);
     logger.trace(headers);

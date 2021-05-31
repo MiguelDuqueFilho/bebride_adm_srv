@@ -18,7 +18,7 @@ class ConnectionsService {
   }
 
   async create({ admin_id, socket_id, user_id }: IConnectionCreate) {
-    logger.debug('ConnectionsService create recebido.');
+    logger.debug('ConnectionsService create  ');
 
     const connection = await this.connectionsRepository.create({
       admin_id,
@@ -30,13 +30,13 @@ class ConnectionsService {
   }
 
   async findByUserId(user_id: string) {
-    logger.debug('ConnectionsService findByUserId recebido.');
+    logger.debug('ConnectionsService findByUserId  ');
     const connection = await this.connectionsRepository.findOne({ user_id });
     return connection;
   }
 
   async update({ admin_id, socket_id, user_id }: IConnectionCreate) {
-    logger.debug('ConnectionsService update recebido.');
+    logger.debug('ConnectionsService update  ');
     const connection = await this.connectionsRepository
       .createQueryBuilder()
       .update(ConnectionChat)
@@ -48,7 +48,7 @@ class ConnectionsService {
   }
 
   async findAllWithoutAdmin() {
-    logger.debug('ConnectionsService findByUserId recebido.');
+    logger.debug('ConnectionsService findByUserId  ');
     const connection = await this.connectionsRepository.find({
       where: { admin_id: null },
       relations: ['user'],
@@ -57,7 +57,7 @@ class ConnectionsService {
   }
 
   async findBySocketId(socket_id: string) {
-    logger.debug('ConnectionsService findBySocketId recebido.');
+    logger.debug('ConnectionsService findBySocketId  ');
     const connection = await this.connectionsRepository.findOne({
       socket_id,
     });
@@ -65,7 +65,7 @@ class ConnectionsService {
   }
 
   async updateAdminId(user_id: string, admin_id: string) {
-    logger.debug('ConnectionsService findBySocketId recebido.');
+    logger.debug('ConnectionsService findBySocketId  ');
     await this.connectionsRepository
       .createQueryBuilder()
       .update(ConnectionChat)

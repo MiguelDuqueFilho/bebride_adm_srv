@@ -34,7 +34,7 @@ class UsersController {
       response.status(201).json({ user });
     } catch (error) {
       const e = new catchError(error).logger();
-      response.status(e.status).json(e.message);
+      response.status(e.status).json(e);
     }
   }
 
@@ -61,7 +61,7 @@ class UsersController {
       response.status(200).json({ user });
     } catch (error) {
       const e = new catchError(error).logger();
-      response.status(e.status).json(e.message);
+      response.status(e.status).json(e);
     }
   }
 
@@ -86,7 +86,7 @@ class UsersController {
       response.status(201).json({ id: user.id });
     } catch (error) {
       const e = new catchError(error).logger();
-      response.status(e.status).json(e.message);
+      response.status(e.status).json(e);
     }
   }
 
@@ -99,7 +99,7 @@ class UsersController {
       response.json(user);
     } catch (error) {
       const e = new catchError(error).logger();
-      response.status(e.status).json(e.message);
+      response.status(e.status).json(e);
     }
   }
 
@@ -122,9 +122,9 @@ class UsersController {
     const { email, password } = request.body;
     const usersService = new UsersService();
     try {
-      const resp = await usersService.login({ email, password });
+      const payload = await usersService.login({ email, password });
 
-      return response.status(200).json({ user: resp.user });
+      return response.status(200).json(payload);
     } catch (error) {
       const e = new catchError(error).logger();
       response.status(e.status).json(e);
